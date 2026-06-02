@@ -34,6 +34,17 @@ npm run dev
 > must be pushed to a remote you can access for `npm install` to resolve it.
 > Installing runs the package's `prepare` script, which builds its `dist/` bundle.
 
+## Deploying to GitHub Pages
+
+```bash
+npm run deploy
+```
+
+This builds the app and publishes `dist/` to the `gh-pages` branch via
+[`gh-pages`](https://github.com/tschaub/gh-pages). Enable Pages for the repo
+(Settings → Pages → branch `gh-pages`). The Vite `base` is set to `./` so the
+app works under the project subpath.
+
 ## How it works
 
 - One connection = one cluster variable = one JSON object whose **shape** is defined
