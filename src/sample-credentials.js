@@ -8,6 +8,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackProduction',
     displayName: 'Slack Production',
+    kind: 'CREDENTIAL',
     templateRef: 'io.camunda:slack-credential:1',
     version: 3,
     type: 'Slack',
@@ -18,6 +19,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackDevelopment',
     displayName: 'Slack Development',
+    kind: 'CREDENTIAL',
     templateRef: 'io.camunda:slack-credential:1',
     version: 2,
     type: 'Slack',
@@ -28,6 +30,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackLegacy',
     displayName: 'Slack Legacy (v1)',
+    kind: 'CREDENTIAL',
     templateRef: 'io.camunda:slack-credential:1',
     version: 1,
     type: 'Slack',
@@ -38,6 +41,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackStaging',
     displayName: 'Slack Staging',
+    kind: 'CREDENTIAL',
     templateRef: 'io.camunda:slack-credential:1',
     version: 2,
     type: 'Slack',
@@ -48,6 +52,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'awsMainAccount',
     displayName: 'AWS Main Account',
+    kind: 'CREDENTIAL',
     templateRef: 'io.camunda:aws-credential:1',
     version: 1,
     type: 'AWS',
@@ -57,6 +62,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'gcpProjectAlpha',
     displayName: 'GCP Project Alpha',
+    kind: 'CREDENTIAL',
     templateRef: 'io.camunda:gcp-credential:1',
     version: 1,
     type: 'GCP',
@@ -66,6 +72,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'sendgridMarketing',
     displayName: 'SendGrid Marketing',
+    kind: 'CREDENTIAL',
     templateRef: 'io.camunda:sendgrid-credential:1',
     version: 2,
     type: 'SendGrid',

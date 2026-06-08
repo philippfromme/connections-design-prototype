@@ -138,6 +138,7 @@ function mountCredentialsModal(credentialInstances, container) {
         {
           name: 'slack_' + id,
           displayName: 'Slack ' + id.charAt(0).toUpperCase() + id.slice(1),
+          kind: 'CREDENTIAL',
           templateRef: 'io.camunda:slack-credential:1',
           version: Math.ceil(Math.random() * 3),
           type: 'Slack',
@@ -220,6 +221,7 @@ function mountCredentialsModal(credentialInstances, container) {
           {
             name,
             displayName: displayName || name,
+            kind: 'CREDENTIAL',
             templateRef: schema.id,
             version,
             type: 'Slack',
