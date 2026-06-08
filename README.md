@@ -1,23 +1,28 @@
-# Connections Design Prototype
+# Credentials Design Prototype
 
-Standalone, shareable prototype of the **connection chooser** for
+Standalone, shareable prototype of the **credential chooser** for
 [bpmn-js element templates](https://github.com/bpmn-io/bpmn-js-element-templates).
 
 It boots a [bpmn-js](https://github.com/bpmn-io/bpmn-js) modeler with the
 properties panel, loads a Slack outbound connector element template that embeds
-a **connection template**, and lets you select connection instances on a service
-task — simulating how the Hub would surface cluster-scoped connections.
+a **credential schema**, and lets you select credential instances on a service
+task — simulating how the Hub would surface cluster-scoped credentials.
 
 ## What you can do
 
 - Apply the **Slack Outbound Connector** template to the task (via the template chooser).
-- Use the **⚙ Connections** modal to simulate the Hub:
-  - load sample connection instances, or start from an empty (disconnected) cluster,
-  - create a connection from the connection template (Hub-rendered form),
+- Use the **⚙ Credentials** modal to simulate the Hub:
+  - load sample credential instances, or start from an empty (disconnected) cluster,
+  - create a credential from the credential schema (Hub-rendered form),
   - create random Slack instances,
   - override the stamped version (demo only) to simulate outdated instances.
-- Pick a connection in the properties panel. Incompatible (outdated) instances are
+- Pick a credential in the properties panel. Incompatible (outdated) instances are
   shown as blocked with a `Requires vN+` hint.
+- The element declares **two** credential choosers (Slack + HTTP proxy) to show
+  that an element template can require multiple credentials, each with its own
+  `schemaRef` and author-controlled placement.
+- When **no Slack credential is chosen**, an inline fallback token field appears
+  (interim `equals: ""` condition; see [Known gaps](#known-gaps-vs-the-design)).
 - Inspect the resulting BPMN XML with the **`</>` XML** button — note that the
   modeler only writes a single FEEL reference plus cached template metadata.
 
@@ -47,8 +52,10 @@ app works under the project subpath.
 
 ## How it works
 
-- One connection = one cluster variable = one JSON object whose **shape** is defined
-  by the connection template (`configurationTemplates` in the element template).
+- One credential = one cluster variable = one JSON object whose **shape** is defined
+  by the credential schema (`credentialSchemas` in the element template).
+- A credential chooser is a property with `type: "Credential"` and a `schemaRef`
+  pointing at the compatible credential schema.
 - The Modeler writes only a single FEEL reference (`=camunda.vars.env.<name>`) into
   the `zeebe:input`, plus cached `modelerConnectionTemplate` / `modelerConnectionName`
   attributes for offline display and filtering.
@@ -61,8 +68,32 @@ See the design docs in the `connections-design` workspace for the full rationale
 | File | Purpose |
 | --- | --- |
 | `src/app.js` | Boots the modeler, registers modules, loads the template and diagram. |
-| `src/connections-ui.js` | The demo "Connections" modal (Hub simulation) and XML viewer. |
-| `src/sample-connections.js` | Mock connection instances and connection templates. |
-| `src/moddle/zeebe-connections.js` | Zeebe moddle extension adding the cached connection attributes. |
-| `resources/slack-connector.json` | Slack element template embedding the connection template. |
+| `src/credentials-ui.js` | The demo "Credentials" modal (Hub simulation) and XML viewer. |
+| `src/sample-credentials.js` | Mock credential instances and credential schemas. |
+| `src/moddle/zeebe-credentials.js` | Zeebe moddle extension adding the cached credential attributes. |
+| `resources/slack-connector.json` | Slack element template embedding the credential schema. |
 | `resources/diagram.bpmn` | Starting diagram with a single task. |
+
+## Known gaps vs. the design
+
+The chooser rendering, the `connectionInstances` service, and the cached BPMN
+attributes are provided by the upstream `bpmn-js-element-templates`
+`connections-design` branch, which has **not** been renamed to credentials yet.
+The following design points are therefore still on the old "connection" naming
+and cannot be changed in this prototype without first updating that branch:
+
+- **Cached BPMN attributes** are still `modelerConnectionTemplate` /
+  `modelerConnectionName` (design: `modelerCredentialTemplate`).
+- **Instance fields** are still matched on `templateRef` / `version`
+  (design: metadata bag with `kind`, `schemaRef`, `schemaVersion`, `displayName`
+  and a separate `value` payload). A `kind: "CREDENTIAL"` discriminator is added
+  to each mock instance to anticipate the design, but matching / version-floor
+  still use `templateRef` / `version`.
+- **Library-internal chooser strings** ("Select connection", "Available
+  connections", "Create connection") are not translated.
+- **Conditions** use the interim `equals: ""` workaround. The design's `isEmpty`
+  and `configuresCredential` conditions require new condition types in the
+  library and are not yet available.
+- **Design-time presence validation** is simulated by the modal's
+  loaded / not-loaded state and the chooser's empty / "needs upgrade" states.
+  Run-time correctness (the design's Test tab) is out of scope.

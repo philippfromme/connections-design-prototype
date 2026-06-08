@@ -1,7 +1,7 @@
 {
   "name": "connections-design-prototype",
   "version": "0.0.0",
-  "description": "Standalone prototype of the Connections chooser for bpmn-js element templates",
+  "description": "Standalone prototype of the Credentials chooser for bpmn-js element templates",
   "type": "module",
   "private": true,
   "scripts": {

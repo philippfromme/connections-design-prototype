@@ -126,7 +126,7 @@
       {
         "id": "connection",
         "label": "Slack credential",
-        "type": "String",
+        "type": "Credential",
         "schemaRef": "io.camunda:slack-credential:1",
         "templateVersion": 2,
         "group": "credential",
@@ -139,7 +139,7 @@
       {
         "id": "proxyCredential",
         "label": "HTTP proxy credential",
-        "type": "String",
+        "type": "Credential",
         "schemaRef": "io.camunda:proxy-credential:1",
         "templateVersion": 1,
         "group": "credential",
