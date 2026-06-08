@@ -21,7 +21,7 @@ import ElementTemplatesIconsRenderer from '@bpmn-io/element-template-icon-render
 
 import ZeebeBehaviorsModule from 'camunda-bpmn-js-behaviors/lib/camunda-cloud';
 
-import ZeebeModdle from './moddle/zeebe-connections';
+import ZeebeModdle from './moddle/zeebe-credentials';
 import ModelerModdle from 'modeler-moddle/resources/modeler.json';
 
 import diagramXML from '../resources/diagram.bpmn?raw';
