@@ -2,9 +2,9 @@ import { domify } from 'min-dom';
 
 import {
   SLACK_ICON,
-  SAMPLE_CONNECTIONS,
-  CONNECTION_TEMPLATES
-} from './sample-connections';
+  SAMPLE_CREDENTIALS,
+  CREDENTIAL_SCHEMAS
+} from './sample-credentials';
 
 function escapeHTML(unsafe) {
   return unsafe
@@ -16,22 +16,26 @@ function escapeHTML(unsafe) {
 }
 
 /**
- * Mounts the demo toolbar: the "Connections" modal (Hub simulation) and the
+ * Mounts the demo toolbar: the "Credentials" modal (Hub simulation) and the
  * XML viewer. Mirrors the prototype UI from bpmn-js-element-templates.
+ *
+ * Note: the underlying modeler service is still named `connectionInstances`
+ * because it is provided by the upstream `bpmn-js-element-templates`
+ * `connections-design` branch, which has not been renamed yet.
  */
-export function mountConnectionsUI(modeler, container) {
-  const connectionInstances = modeler.get('connectionInstances', false);
+export function mountCredentialsUI(modeler, container) {
+  const credentialInstances = modeler.get('connectionInstances', false);
   const bpmnjs = modeler.get('bpmnjs');
 
-  if (connectionInstances) {
-    mountConnectionsModal(connectionInstances, container);
+  if (credentialInstances) {
+    mountCredentialsModal(credentialInstances, container);
   }
 
   mountXmlViewer(bpmnjs, container);
 }
 
-function mountConnectionsModal(connectionInstances, container) {
-  const toggleBtn = domify('<button class="ci-toggle-btn">Connections</button>');
+function mountCredentialsModal(credentialInstances, container) {
+  const toggleBtn = domify('<button class="ci-toggle-btn">Credentials</button>');
   container.appendChild(toggleBtn);
 
   let backdrop = null;
@@ -59,12 +63,12 @@ function mountConnectionsModal(connectionInstances, container) {
   };
 
   const renderModal = (modal) => {
-    const all = connectionInstances.getAll();
-    const loaded = connectionInstances.isLoaded();
+    const all = credentialInstances.getAll();
+    const loaded = credentialInstances.isLoaded();
 
     modal.innerHTML = `
       <div class="ci-modal-header">
-        <h3>Connection Instances (Hub simulation)</h3>
+        <h3>Credential Instances (Hub simulation)</h3>
         <button data-close>&times;</button>
       </div>
       <div class="ci-modal-body">
@@ -73,10 +77,10 @@ function mountConnectionsModal(connectionInstances, container) {
           <div class="ci-list-container"></div>
         </div>
         <div class="ci-section">
-          <h4>Create new connection</h4>
+          <h4>Create new credential</h4>
           <div class="ci-create-actions">
             <button data-action="random">Create random (Slack)</button>
-            <button data-action="explicit">Create from template…</button>
+            <button data-action="explicit">Create from schema…</button>
           </div>
           <div class="ci-form-container"></div>
         </div>
@@ -96,7 +100,7 @@ function mountConnectionsModal(connectionInstances, container) {
     const listContainer = modal.querySelector('.ci-list-container');
 
     if (all.length === 0) {
-      listContainer.innerHTML = '<p class="ci-empty">No connection instances available.</p>';
+      listContainer.innerHTML = '<p class="ci-empty">No credential instances available.</p>';
     } else {
       const list = domify('<ul class="ci-instance-list"></ul>');
 
@@ -112,8 +116,8 @@ function mountConnectionsModal(connectionInstances, container) {
         );
 
         li.querySelector('button').addEventListener('click', () => {
-          const updated = connectionInstances.getAll().filter((_, i) => i !== idx);
-          connectionInstances.setInstances(updated);
+          const updated = credentialInstances.getAll().filter((_, i) => i !== idx);
+          credentialInstances.setInstances(updated);
           renderModal(modal);
         });
 
@@ -126,10 +130,10 @@ function mountConnectionsModal(connectionInstances, container) {
     // Random creation
     modal.querySelector('[data-action="random"]').addEventListener('click', () => {
       const id = Math.random().toString(36).slice(2, 7);
-      const current = connectionInstances.getAll();
+      const current = credentialInstances.getAll();
       const authTypes = [ 'Bearer token', 'OAuth2', 'Bot token' ];
 
-      connectionInstances.setInstances([
+      credentialInstances.setInstances([
         ...current,
         {
           name: 'slack_' + id,
@@ -146,17 +150,17 @@ function mountConnectionsModal(connectionInstances, container) {
       renderModal(modal);
     });
 
-    // Explicit creation — render connection template form
+    // Explicit creation — render credential schema form
     const formContainer = modal.querySelector('.ci-form-container');
 
     modal.querySelector('[data-action="explicit"]').addEventListener('click', () => {
-      const tmpl = CONNECTION_TEMPLATES[0]; // only Slack for now
+      const schema = CREDENTIAL_SCHEMAS[0]; // only Slack for now
 
       formContainer.innerHTML = '';
 
       const form = domify(
         `<div class="ci-form">
-          <h5>New "${ escapeHTML(tmpl.name) }" — fill in fields as Hub would render them</h5>
+          <h5>New "${ escapeHTML(schema.name) }" — fill in fields as Hub would render them</h5>
           <div class="ci-form-row">
             <label>Instance name (cluster variable key)</label>
             <input type="text" data-field="name" placeholder="e.g. slackProduction" />
@@ -166,25 +170,25 @@ function mountConnectionsModal(connectionInstances, container) {
             <input type="text" data-field="displayName" placeholder="e.g. Slack Production" />
           </div>
           <div class="ci-form-row">
-            <label>Version (stamped from template)</label>
+            <label>Version (stamped from schema)</label>
             <label style="display:inline-flex;align-items:center;gap:4px;font-weight:normal;font-size:11px;color:#888;margin-bottom:4px;">
               <input type="checkbox" data-field="overrideVersion" />
               Override version (demo only — simulate outdated instances)
             </label>
-            <input type="number" data-field="version" value="${ tmpl.version }" min="1" disabled />
+            <input type="number" data-field="version" value="${ schema.version }" min="1" disabled />
           </div>
           <hr/>
           <p style="font-size:11px;color:#666;margin:4px 0 8px;">
-            Below: connection template properties (the JSON object stored as cluster variable)
+            Below: credential schema properties (the JSON object stored as cluster variable)
           </p>
-          ${ tmpl.properties.map(p =>
+          ${ schema.properties.map(p =>
             `<div class="ci-form-row">
               <label>${ escapeHTML(p.label) }${ p.required ? ' *' : '' }</label>
               <input type="text" data-prop="${ escapeHTML(p.key) }" placeholder="${ escapeHTML(p.key) }" />
             </div>`
           ).join('') }
           <div class="ci-form-actions">
-            <button data-primary data-action="submit">Create connection</button>
+            <button data-primary data-action="submit">Create credential</button>
             <button data-action="cancel">Cancel</button>
           </div>
         </div>`
@@ -209,19 +213,19 @@ function mountConnectionsModal(connectionInstances, container) {
           return;
         }
 
-        const current = connectionInstances.getAll();
+        const current = credentialInstances.getAll();
 
-        connectionInstances.setInstances([
+        credentialInstances.setInstances([
           ...current,
           {
             name,
             displayName: displayName || name,
-            templateRef: tmpl.id,
+            templateRef: schema.id,
             version,
             type: 'Slack',
             authType: 'Bearer token',
             status: 'active',
-            icon: tmpl.icon
+            icon: schema.icon
           }
         ]);
 
@@ -234,12 +238,12 @@ function mountConnectionsModal(connectionInstances, container) {
 
     // Bulk actions
     modal.querySelector('[data-action="load-samples"]').addEventListener('click', () => {
-      connectionInstances.setInstances([ ...SAMPLE_CONNECTIONS ]);
+      credentialInstances.setInstances([ ...SAMPLE_CREDENTIALS ]);
       renderModal(modal);
     });
 
     modal.querySelector('[data-action="mark-loaded"]').addEventListener('click', () => {
-      connectionInstances.setInstances([]);
+      credentialInstances.setInstances([]);
       renderModal(modal);
     });
   };

@@ -27,7 +27,7 @@ import ModelerModdle from 'modeler-moddle/resources/modeler.json';
 import diagramXML from '../resources/diagram.bpmn?raw';
 import elementTemplates from '../resources/slack-connector.json';
 
-import { mountConnectionsUI } from './connections-ui';
+import { mountCredentialsUI } from './credentials-ui';
 
 const canvas = document.querySelector('#canvas');
 const propertiesPanel = document.querySelector('#properties');
@@ -62,7 +62,7 @@ async function run() {
     console.error('failed to import diagram', err);
   }
 
-  mountConnectionsUI(modeler, canvas);
+  mountCredentialsUI(modeler, canvas);
 }
 
 run();
