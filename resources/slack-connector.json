@@ -44,6 +44,24 @@
             }
           }
         ]
+      },
+      {
+        "id": "io.camunda:proxy-credential:1",
+        "name": "HTTP Proxy Credential",
+        "version": 1,
+        "properties": [
+          {
+            "label": "Proxy URL",
+            "type": "String",
+            "constraints": {
+              "notEmpty": true
+            },
+            "binding": {
+              "type": "zeebe:property",
+              "name": "proxyUrl"
+            }
+          }
+        ]
       }
     ],
     "groups": [
@@ -115,6 +133,19 @@
         "optional": true,
         "binding": {
           "name": "token",
+          "type": "zeebe:input"
+        }
+      },
+      {
+        "id": "proxyCredential",
+        "label": "HTTP proxy credential",
+        "type": "String",
+        "schemaRef": "io.camunda:proxy-credential:1",
+        "templateVersion": 1,
+        "group": "credential",
+        "optional": true,
+        "binding": {
+          "name": "proxy",
           "type": "zeebe:input"
         }
       },

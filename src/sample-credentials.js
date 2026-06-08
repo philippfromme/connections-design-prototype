@@ -78,6 +78,16 @@ export const SAMPLE_CREDENTIALS = [
     type: 'SendGrid',
     authType: 'API key',
     status: 'inactive'
+  },
+  {
+    name: 'corporateProxy',
+    displayName: 'Corporate HTTP Proxy',
+    kind: 'CREDENTIAL',
+    templateRef: 'io.camunda:proxy-credential:1',
+    version: 1,
+    type: 'HTTP Proxy',
+    authType: 'Basic',
+    status: 'active'
   }
 ];
 
