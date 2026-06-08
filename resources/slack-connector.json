@@ -150,6 +150,23 @@
         }
       },
       {
+        "id": "tokenFallback",
+        "label": "Slack API token (inline fallback)",
+        "description": "Shown only when no Slack credential is chosen. Interim `equals: \"\"` condition; the design's target is an `isEmpty` condition.",
+        "type": "String",
+        "group": "credential",
+        "optional": true,
+        "feel": "optional",
+        "binding": {
+          "name": "tokenInline",
+          "type": "zeebe:input"
+        },
+        "condition": {
+          "property": "connection",
+          "equals": ""
+        }
+      },
+      {
         "id": "method",
         "label": "Method",
         "value": "chat.postMessage",
