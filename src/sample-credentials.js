@@ -8,7 +8,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackProduction',
     displayName: 'Slack Production',
-    templateRef: 'io.camunda:slack-connection:1',
+    templateRef: 'io.camunda:slack-credential:1',
     version: 3,
     type: 'Slack',
     authType: 'Bearer token',
@@ -18,7 +18,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackDevelopment',
     displayName: 'Slack Development',
-    templateRef: 'io.camunda:slack-connection:1',
+    templateRef: 'io.camunda:slack-credential:1',
     version: 2,
     type: 'Slack',
     authType: 'Bearer token',
@@ -28,7 +28,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackLegacy',
     displayName: 'Slack Legacy (v1)',
-    templateRef: 'io.camunda:slack-connection:1',
+    templateRef: 'io.camunda:slack-credential:1',
     version: 1,
     type: 'Slack',
     authType: 'Bot token',
@@ -38,7 +38,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'slackStaging',
     displayName: 'Slack Staging',
-    templateRef: 'io.camunda:slack-connection:1',
+    templateRef: 'io.camunda:slack-credential:1',
     version: 2,
     type: 'Slack',
     authType: 'OAuth2',
@@ -48,7 +48,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'awsMainAccount',
     displayName: 'AWS Main Account',
-    templateRef: 'io.camunda:aws-connection:1',
+    templateRef: 'io.camunda:aws-credential:1',
     version: 1,
     type: 'AWS',
     authType: 'Access Key',
@@ -57,7 +57,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'gcpProjectAlpha',
     displayName: 'GCP Project Alpha',
-    templateRef: 'io.camunda:gcp-connection:1',
+    templateRef: 'io.camunda:gcp-credential:1',
     version: 1,
     type: 'GCP',
     authType: 'Service Account',
@@ -66,7 +66,7 @@ export const SAMPLE_CREDENTIALS = [
   {
     name: 'sendgridMarketing',
     displayName: 'SendGrid Marketing',
-    templateRef: 'io.camunda:sendgrid-connection:1',
+    templateRef: 'io.camunda:sendgrid-credential:1',
     version: 2,
     type: 'SendGrid',
     authType: 'API key',
@@ -79,8 +79,8 @@ export const SAMPLE_CREDENTIALS = [
  */
 export const CREDENTIAL_SCHEMAS = [
   {
-    id: 'io.camunda:slack-connection:1',
-    name: 'Slack Connection',
+    id: 'io.camunda:slack-credential:1',
+    name: 'Slack Credential',
     version: 2,
     icon: SLACK_ICON,
     properties: [

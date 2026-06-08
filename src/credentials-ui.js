@@ -138,7 +138,7 @@ function mountCredentialsModal(credentialInstances, container) {
         {
           name: 'slack_' + id,
           displayName: 'Slack ' + id.charAt(0).toUpperCase() + id.slice(1),
-          templateRef: 'io.camunda:slack-connection:1',
+          templateRef: 'io.camunda:slack-credential:1',
           version: Math.ceil(Math.random() * 3),
           type: 'Slack',
           authType: authTypes[Math.floor(Math.random() * authTypes.length)],
