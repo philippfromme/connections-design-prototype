@@ -21,6 +21,11 @@ import ElementTemplatesIconsRenderer from '@bpmn-io/element-template-icon-render
 
 import ZeebeBehaviorsModule from 'camunda-bpmn-js-behaviors/lib/camunda-cloud';
 
+import {
+  CreateAppendAnythingModule,
+  CreateAppendElementTemplatesModule
+} from 'bpmn-js-create-append-anything';
+
 import ZeebeModdle from './moddle/zeebe-credentials';
 import ModelerModdle from 'modeler-moddle/resources/modeler.json';
 
@@ -41,7 +46,9 @@ const modeler = new BpmnModeler({
     CloudElementTemplatesPropertiesProviderModule,
     ElementTemplateChooserModule,
     ElementTemplatesIconsRenderer,
-    ZeebeBehaviorsModule
+    ZeebeBehaviorsModule,
+    CreateAppendAnythingModule,
+    CreateAppendElementTemplatesModule
   ],
   moddleExtensions: {
     zeebe: ZeebeModdle,
@@ -64,6 +71,16 @@ async function run() {
 
   mountCredentialsUI(modeler, canvas);
 }
+
+modeler.on('elements.changed', async () => {
+  try {
+    const { xml } = await modeler.saveXML({ format: true });
+
+    console.log(xml);
+  } catch (err) {
+    console.error('failed to save XML', err);
+  }
+});
 
 run();
 

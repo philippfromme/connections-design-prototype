@@ -7,11 +7,9 @@ import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe.json';
  * In production this would live in `zeebe-bpmn-moddle` upstream.
  * For the prototype we merge the additional type into the descriptor.
  *
- * NOTE: the attribute names (`modelerConnectionTemplate`, `modelerConnectionName`)
- * are intentionally kept as-is. They are written by the upstream
- * `bpmn-js-element-templates` `connections-design` branch, which has not been
- * renamed to credentials yet. Renaming them here would break the chooser's
- * metadata stamping. Rename upstream first, then align this descriptor.
+ * The attribute names (`modelerCredentialsTemplate`, `modelerCredentialsName`,
+ * `modelerCredentialsVersion`) mirror the upstream `bpmn-js-element-templates`
+ * descriptor that writes them during metadata stamping.
  */
 export default {
   ...ZeebeModdle,
@@ -23,14 +21,19 @@ export default {
       extends: [ 'zeebe:Input', 'zeebe:Property' ],
       properties: [
         {
-          name: 'modelerConnectionTemplate',
+          name: 'modelerCredentialsTemplate',
           isAttr: true,
           type: 'String'
         },
         {
-          name: 'modelerConnectionName',
+          name: 'modelerCredentialsName',
           isAttr: true,
           type: 'String'
+        },
+        {
+          name: 'modelerCredentialsVersion',
+          isAttr: true,
+          type: 'Integer'
         }
       ]
     }

@@ -17,6 +17,7 @@
     "@bpmn-io/element-template-icon-renderer": "^1.0.0",
     "@bpmn-io/properties-panel": "^3.41.3",
     "bpmn-js": "^18.14.0",
+    "bpmn-js-create-append-anything": "^1.2.0",
     "bpmn-js-element-templates": "github:bpmn-io/bpmn-js-element-templates#connections-design",
     "bpmn-js-properties-panel": "^5.54.0",
     "camunda-bpmn-js-behaviors": "^1.14.1",
