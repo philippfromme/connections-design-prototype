@@ -7,9 +7,11 @@ import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe.json';
  * In production this would live in `zeebe-bpmn-moddle` upstream.
  * For the prototype we merge the additional type into the descriptor.
  *
- * The attribute names (`modelerCredentialsTemplate`, `modelerCredentialsName`,
- * `modelerCredentialsVersion`) mirror the upstream `bpmn-js-element-templates`
- * descriptor that writes them during metadata stamping.
+ * NOTE: The upstream `bpmn-js-element-templates` connections-design branch still
+ * writes `modelerCredentialsTemplate` / `modelerCredentialsName` (plural "Credentials").
+ * The design spec targets singular: `modelerCredentialTemplate`, `modelerCredentialName`
+ * with NO version attribute on BPMN. This moddle must match what upstream writes TODAY
+ * to keep the prototype functional. Update once upstream renames.
  */
 export default {
   ...ZeebeModdle,

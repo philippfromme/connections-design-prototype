@@ -23,7 +23,7 @@
     "engines": {
       "camunda": "^8.3"
     },
-    "credentialSchemas": [
+    "credentialTemplates": [
       {
         "id": "io.camunda:slack-credential:1",
         "name": "Slack Credential",
@@ -35,11 +35,12 @@
           {
             "label": "Slack API Token",
             "type": "String",
+            "secret": true,
             "constraints": {
               "notEmpty": true
             },
             "binding": {
-              "type": "zeebe:property",
+              "type": "property",
               "name": "slackOauthToken"
             }
           }
@@ -57,7 +58,7 @@
               "notEmpty": true
             },
             "binding": {
-              "type": "zeebe:property",
+              "type": "property",
               "name": "proxyUrl"
             }
           }
@@ -127,7 +128,9 @@
         "id": "connection",
         "label": "Slack credential",
         "type": "Credential",
+        "credentialTemplate": "io.camunda:slack-credential:1",
         "schemaRef": "io.camunda:slack-credential:1",
+        "credentialTemplateVersion": 2,
         "templateVersion": 2,
         "group": "credential",
         "optional": true,
@@ -140,7 +143,9 @@
         "id": "proxyCredential",
         "label": "HTTP proxy credential",
         "type": "Credential",
+        "credentialTemplate": "io.camunda:proxy-credential:1",
         "schemaRef": "io.camunda:proxy-credential:1",
+        "credentialTemplateVersion": 1,
         "templateVersion": 1,
         "group": "credential",
         "optional": true,
@@ -152,7 +157,7 @@
       {
         "id": "tokenFallback",
         "label": "Slack API token (inline fallback)",
-        "description": "Shown only when no Slack credential is chosen. Interim `equals: \"\"` condition; the design's target is an `isEmpty` condition.",
+        "description": "Shown only when no Slack credential is chosen. Interim `equals: \"\"` condition; the design targets `{ \"property\": \"connection\", \"isEmpty\": true }` once implemented.",
         "type": "String",
         "group": "credential",
         "optional": true,

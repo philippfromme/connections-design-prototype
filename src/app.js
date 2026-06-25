@@ -69,7 +69,7 @@ async function run() {
     console.error('failed to import diagram', err);
   }
 
-  mountCredentialsUI(modeler, canvas);
+  mountCredentialsUI(modeler, canvas, elementTemplates);
 }
 
 modeler.on('elements.changed', async () => {
