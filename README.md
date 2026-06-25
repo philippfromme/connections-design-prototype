@@ -33,7 +33,7 @@ cluster-scoped credentials.
   shown as blocked with a `Requires vN+` hint, driven by the template's version floor.
 - The element declares **two** credential choosers (Slack + HTTP proxy) to show
   that an element template can require multiple credentials, each with its own
-  `credentialTemplate` and author-controlled placement.
+  `configurationTemplate` and author-controlled placement.
 - When **no Slack credential is chosen**, an inline fallback token field appears
   (interim `equals: ""` condition; see [Known gaps](#known-gaps-vs-the-design)).
 - Inspect the resulting BPMN XML with the **`</>` XML** button — note that the
@@ -66,15 +66,14 @@ app works under the project subpath.
 ## How it works
 
 - One credential = one cluster variable = one JSON object whose **shape** is defined
-  by a credential template (`credentialTemplates` in the element template).
-- A credential chooser is a property with `type: "Credential"` and a
-  `credentialTemplate` (+ `credentialTemplateVersion`) pointing at the compatible
-  credential template. A chooser only offers instances at or above the declared
+  by a configuration template (`configurationTemplates` in the element template).
+- A credential chooser is a property with `type: "Configuration"` and a
+  `configurationTemplate` (+ `configurationTemplateVersion`) pointing at the compatible
+  configuration template. A chooser only offers instances at or above the declared
   **version floor**.
 - The Modeler writes only a single FEEL reference (`=camunda.vars.env.<NAME>`) into
-  the `zeebe:input`, plus cached `modelerCredentialsTemplate` /
-  `modelerCredentialsName` / `modelerCredentialsVersion` attributes for offline
-  display and filtering.
+  the `zeebe:input`, plus cached `modelerConfigurationTemplate` /
+  `modelerConfigurationName` attributes for offline display and filtering.
 - The connector receives the full JSON object at runtime and destructures it.
 
 The "Create connection" / "Update connection" chooser actions are upstream stubs.
@@ -92,30 +91,32 @@ See the design docs in the `connections-design` workspace for the full rationale
 | `src/app.js` | Boots the modeler, registers modules, loads the template and diagram. |
 | `src/credentials-ui.js` | The "Credentials" modal (Hub simulation), the create/update/upgrade flows, chooser action wiring, and XML viewer. |
 | `src/sample-credentials.js` | Mock credential instances and credential template definitions. |
-| `src/moddle/zeebe-credentials.js` | Zeebe moddle extension adding the cached credential attributes. |
-| `resources/slack-connector.json` | Slack element template embedding the credential templates. |
+| `src/moddle/zeebe-credentials.js` | Zeebe moddle extension adding the cached configuration attributes. |
+| `resources/slack-connector.json` | Slack element template embedding the configuration templates. |
 | `resources/diagram.bpmn` | Starting diagram with a single task. |
 
 ## Known gaps vs. the design
 
-The chooser rendering, the `connectionInstances` service, and the cached BPMN
-attributes are provided by the upstream `bpmn-js-element-templates`
-`connections-design` branch, which has **not** been renamed to the design's
-credential terminology yet. To stay functional, the prototype carries **both**
-the design field names and the upstream legacy names:
+The chooser rendering and the cached BPMN attributes are provided by the upstream
+`bpmn-js-element-templates` `connections-design` branch. Its **data contract** has
+been renamed to the design's `configuration*` mechanism vocabulary; the prototype
+consumes those names directly:
 
-- **Cached BPMN attributes** are still plural `modelerCredentialsTemplate` /
-  `modelerCredentialsName` / `modelerCredentialsVersion`. The design targets
-  singular `modelerCredentialTemplate` / `modelerCredentialName` with **no**
-  version attribute on BPMN.
-- **Element-template properties** carry both the design's `credentialTemplate` /
-  `credentialTemplateVersion` and the upstream `schemaRef` / `templateVersion`;
-  instance matching and the version floor still run on the upstream
-  `templateRef` / `version`. A `kind: "CREDENTIAL"` discriminator is added to each
-  mock instance to anticipate the design.
-- **Library-internal chooser strings** ("Select connection", "Available
-  connections", "Create connection") are not translated; "Update connection" is
-  relabeled at runtime from the upstream "Go to connection".
+- **Cached BPMN attributes** are singular `modelerConfigurationTemplate` /
+  `modelerConfigurationName`, with **no** version attribute on BPMN, matching the
+  design.
+- **Element-template properties** use `type: "Configuration"` with
+  `configurationTemplate` / `configurationTemplateVersion`; instance matching and
+  the version floor run on the instance's `configurationTemplate` /
+  `configurationTemplateVersion`. A `kind: "CREDENTIAL"` discriminator marks each
+  configuration template and mock instance.
+- **Library-internal handles remain "connection"-named** by design intent: the DI
+  service is still `connectionInstances`, the chooser DOM uses
+  `bio-properties-panel-connection-chooser*` classes, and the popover strings
+  ("Select connection", "Available connections", "Create connection") are
+  untranslated; "Update connection" is relabeled at runtime from the upstream
+  "Go to connection". These are internal implementation details, not part of the
+  design's data model.
 - **Conditions** use the interim `equals: ""` workaround. The design's `isEmpty`
   and `configuresCredential` conditions require new condition types in the
   library and are not yet available.

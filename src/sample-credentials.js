@@ -5,21 +5,15 @@ export const SLACK_ICON = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI3IiBoZWl
  * Each instance maps to one cluster variable holding a JSON configuration object.
  *
  * Data model per design spec (metadata bag):
- *   kind, credentialTemplate, credentialTemplateVersion, displayName
- *
- * NOTE: The upstream bpmn-js-element-templates connections-design branch reads
- * `templateRef` and `version` fields. Both are provided for compatibility.
- * Once upstream is updated to the design spec field names, remove the legacy aliases.
+ *   kind, configurationTemplate, configurationTemplateVersion, displayName
  */
 export const SAMPLE_CREDENTIALS = [
   {
     name: 'SLACK_PRODUCTION',
     displayName: 'Slack Production',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:slack-credential:1',
-    templateRef: 'io.camunda:slack-credential:1',
-    credentialTemplateVersion: 3,
-    version: 3,
+    configurationTemplate: 'io.camunda:slack-credential:1',
+    configurationTemplateVersion: 3,
     storedValue: {
       slackOauthToken: 'camunda.secrets.SLACK_TOKEN_PROD'
     },
@@ -29,10 +23,8 @@ export const SAMPLE_CREDENTIALS = [
     name: 'SLACK_DEVELOPMENT',
     displayName: 'Slack Development',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:slack-credential:1',
-    templateRef: 'io.camunda:slack-credential:1',
-    credentialTemplateVersion: 2,
-    version: 2,
+    configurationTemplate: 'io.camunda:slack-credential:1',
+    configurationTemplateVersion: 2,
     storedValue: {
       slackOauthToken: 'camunda.secrets.SLACK_TOKEN_DEV'
     },
@@ -42,10 +34,8 @@ export const SAMPLE_CREDENTIALS = [
     name: 'SLACK_LEGACY',
     displayName: 'Slack Legacy (v1)',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:slack-credential:1',
-    templateRef: 'io.camunda:slack-credential:1',
-    credentialTemplateVersion: 1,
-    version: 1,
+    configurationTemplate: 'io.camunda:slack-credential:1',
+    configurationTemplateVersion: 1,
     storedValue: {
       slackOauthToken: 'xoxb-legacy-plain-token'
     },
@@ -55,10 +45,8 @@ export const SAMPLE_CREDENTIALS = [
     name: 'SLACK_STAGING',
     displayName: 'Slack Staging',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:slack-credential:1',
-    templateRef: 'io.camunda:slack-credential:1',
-    credentialTemplateVersion: 2,
-    version: 2,
+    configurationTemplate: 'io.camunda:slack-credential:1',
+    configurationTemplateVersion: 2,
     storedValue: {
       slackOauthToken: 'camunda.secrets.SLACK_TOKEN_STAGING'
     },
@@ -68,37 +56,29 @@ export const SAMPLE_CREDENTIALS = [
     name: 'AWS_MAIN_ACCOUNT',
     displayName: 'AWS Main Account',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:aws-credential:1',
-    templateRef: 'io.camunda:aws-credential:1',
-    credentialTemplateVersion: 1,
-    version: 1
+    configurationTemplate: 'io.camunda:aws-credential:1',
+    configurationTemplateVersion: 1
   },
   {
     name: 'GCP_PROJECT_ALPHA',
     displayName: 'GCP Project Alpha',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:gcp-credential:1',
-    templateRef: 'io.camunda:gcp-credential:1',
-    credentialTemplateVersion: 1,
-    version: 1
+    configurationTemplate: 'io.camunda:gcp-credential:1',
+    configurationTemplateVersion: 1
   },
   {
     name: 'SENDGRID_MARKETING',
     displayName: 'SendGrid Marketing',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:sendgrid-credential:1',
-    templateRef: 'io.camunda:sendgrid-credential:1',
-    credentialTemplateVersion: 2,
-    version: 2
+    configurationTemplate: 'io.camunda:sendgrid-credential:1',
+    configurationTemplateVersion: 2
   },
   {
     name: 'CORPORATE_PROXY',
     displayName: 'Corporate HTTP Proxy',
     kind: 'CREDENTIAL',
-    credentialTemplate: 'io.camunda:proxy-credential:1',
-    templateRef: 'io.camunda:proxy-credential:1',
-    credentialTemplateVersion: 1,
-    version: 1,
+    configurationTemplate: 'io.camunda:proxy-credential:1',
+    configurationTemplateVersion: 1,
     storedValue: {
       proxyUrl: 'https://proxy.acme.internal:8080'
     }
@@ -106,13 +86,28 @@ export const SAMPLE_CREDENTIALS = [
 ];
 
 /**
- * Known credential templates (embedded in element templates, used to render editor forms).
- * In production these come from the element template's `credentialTemplates` array.
+ * Names of secrets known to the connected cluster's secret store.
+ * Modelled as names only — the store is non-revealing (values are never read
+ * back). Seeds the `camunda.secrets.*` references used by the sample credentials.
  */
-export const CREDENTIAL_TEMPLATES = [
+export const INITIAL_SECRETS = [
+  'SLACK_TOKEN_PROD',
+  'SLACK_TOKEN_DEV',
+  'SLACK_TOKEN_STAGING'
+];
+
+/**
+ * Known configuration templates (embedded in element templates, used to render editor forms).
+ * In production these come from the element template's `configurationTemplates` array.
+ *
+ * Each template carries a `kind` (the domain class it produces — `CREDENTIAL` here);
+ * "configuration" is the generic mechanism, "credential" is the domain concept.
+ */
+export const CONFIGURATION_TEMPLATES = [
   {
     id: 'io.camunda:slack-credential:1',
     name: 'Slack Credential',
+    kind: 'CREDENTIAL',
     version: 2,
     icon: SLACK_ICON,
     properties: [
@@ -122,6 +117,7 @@ export const CREDENTIAL_TEMPLATES = [
   {
     id: 'io.camunda:proxy-credential:1',
     name: 'HTTP Proxy Credential',
+    kind: 'CREDENTIAL',
     version: 1,
     properties: [
       { key: 'proxyUrl', label: 'Proxy URL', type: 'String', required: true }
