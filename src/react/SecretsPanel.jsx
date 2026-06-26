@@ -1,6 +1,13 @@
 import { useState } from 'react';
 
 import {
+  Button,
+  Checkbox,
+  Input,
+  Label
+} from '@camunda/design-system';
+
+import {
   SECRET_PREFIX,
   getSecretStore,
   setSecretWritable,
@@ -48,14 +55,13 @@ export function SecretsPanel() {
       <div className="ci-section">
         <h4>Secret store capability</h4>
         <div className="ci-permissions">
-          <label>
-            <input
-              type="checkbox"
+          <Label className="ci-checkbox-label">
+            <Checkbox
               data-secret-cap="writable"
               checked={secretStore.writable}
-              onChange={(e) => setSecretWritable(e.target.checked)}
+              onCheckedChange={(checked) => setSecretWritable(checked === true)}
             /> writable (GAP-004)
-          </label>
+          </Label>
         </div>
         <p className="ci-secret-modal-hint">
           References (<code>{SECRET_PREFIX}NAME</code>) point at secrets in the connected
@@ -82,7 +88,7 @@ export function SecretsPanel() {
         <div className="ci-section">
           <h4>Add a secret</h4>
           <div className="ci-secret-create-row">
-            <input
+            <Input
               type="text"
               className="ci-secret-input"
               data-new-name
@@ -90,7 +96,7 @@ export function SecretsPanel() {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
-            <input
+            <Input
               type="text"
               className="ci-secret-input"
               data-new-value
@@ -98,7 +104,7 @@ export function SecretsPanel() {
               value={newValue}
               onChange={(e) => setNewValue(e.target.value)}
             />
-            <button type="button" className="ci-secret-btn" data-add onClick={handleAdd}>Add secret</button>
+            <Button type="button" className="ci-secret-btn" data-add onClick={handleAdd}>Add secret</Button>
           </div>
           {error && <span className="ci-field-error" data-new-error>{error}</span>}
         </div>

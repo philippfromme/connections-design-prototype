@@ -4,6 +4,8 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import '@bpmn-io/properties-panel/dist/assets/properties-panel.css';
 import 'bpmn-js-element-templates/dist/assets/element-templates.css';
 
+import '@camunda/design-system/styles.css';
+
 import './app.css';
 
 import BpmnModeler from 'bpmn-js/lib/Modeler';

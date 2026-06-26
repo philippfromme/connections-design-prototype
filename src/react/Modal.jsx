@@ -1,34 +1,51 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@camunda/design-system';
+
 /**
- * Generic modal frame: backdrop + panel + header with a close button.
+ * Generic modal frame built on the Camunda design system `Dialog`.
  *
- * Clicking the backdrop (but not the panel) calls `onClose`, matching the
- * original vanilla overlays. `className` selects the panel style
- * (`ci-modal` for credential modals, `xml-modal` for the viewers).
+ * `DialogContent` already provides the overlay, portal, `.c4-ui` scope and a
+ * close button, so callers only supply a `title` (or a fully custom `header`)
+ * and the body. Dismissing via the close button, the backdrop or `Escape`
+ * routes through `onClose`.
+ *
+ * `width` overrides the default (narrow) dialog width via an inline style,
+ * since the prebuilt design-system stylesheet only ships the utility classes
+ * its own components use.
  */
 export function Modal({
   onClose,
-  className = 'ci-modal',
-  backdropClassName = 'ci-modal-backdrop',
-  header,
   title,
+  header,
+  width = 560,
   children
 }) {
   return (
-    <div
-      className={backdropClassName}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className={className}>
-        {header || (
-          <div className="ci-modal-header">
-            <h3>{title}</h3>
-            <button data-close onClick={onClose}>×</button>
-          </div>
-        )}
-        {children}
-      </div>
-    </div>
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent
+        aria-describedby={undefined}
+        style={{
+          maxWidth: width,
+          width: 'calc(100% - 2rem)',
+          maxHeight: 'calc(100vh - 2rem)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}
+      >
+        {header || (title && (
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
+        ))}
+        <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }}>
+          {children}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

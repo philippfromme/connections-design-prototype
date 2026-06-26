@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react';
 
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@camunda/design-system';
+
 import { Modal } from './Modal';
 import { CredentialsPanel } from './CredentialsPanel';
 import { SecretsPanel } from './SecretsPanel';
 
 /**
  * The unified management modal ("Hub" simulation) with Credentials and Secrets
- * tabs. Both panels stay mounted (toggled via `hidden`) so in-progress form
- * state survives a tab switch. `registerSetTab` lets the controller jump to a
- * tab when the modal is reopened or deep-linked from a secret field.
+ * tabs. Both panels stay mounted (`forceMount` keeps inactive `TabsContent` in
+ * the tree, hidden) so in-progress form state survives a tab switch.
+ * `registerSetTab` lets the controller jump to a tab when the modal is
+ * reopened or deep-linked from a secret field.
  */
 export function ManageModal({ credentialInstances, initialTab = 'credentials', onClose, registerSetTab }) {
   const [ activeTab, setActiveTab ] = useState(initialTab);
@@ -18,31 +26,20 @@ export function ManageModal({ credentialInstances, initialTab = 'credentials', o
     return () => registerSetTab?.(null);
   }, [ registerSetTab ]);
 
-  const tab = (id, label) => (
-    <button
-      type="button"
-      className={'ci-tab' + (activeTab === id ? ' active' : '')}
-      data-tab={id}
-      onClick={() => setActiveTab(id)}
-    >
-      {label}
-    </button>
-  );
-
   return (
-    <Modal onClose={onClose} title="Manage (Hub)">
-      <div className="ci-tabs">
-        {tab('credentials', 'Credentials')}
-        {tab('secrets', 'Secrets')}
-      </div>
-      <div className="ci-modal-body">
-        <div className="ci-tab-panel" data-panel="credentials" hidden={activeTab !== 'credentials'}>
+    <Modal onClose={onClose} title="Manage Credentials and Secrets" width={720}>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="ci-modal-body">
+        <TabsList variant="line">
+          <TabsTrigger value="credentials">Credentials</TabsTrigger>
+          <TabsTrigger value="secrets">Secrets</TabsTrigger>
+        </TabsList>
+        <TabsContent value="credentials" forceMount hidden={activeTab !== 'credentials'}>
           <CredentialsPanel credentialInstances={credentialInstances} />
-        </div>
-        <div className="ci-tab-panel" data-panel="secrets" hidden={activeTab !== 'secrets'}>
+        </TabsContent>
+        <TabsContent value="secrets" forceMount hidden={activeTab !== 'secrets'}>
           <SecretsPanel />
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
     </Modal>
   );
 }

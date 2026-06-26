@@ -17,6 +17,17 @@ import {
 } from './react/mounts';
 
 /**
+ * Inline lucide icon markup (https://lucide.dev) for the vanilla toolbar
+ * buttons. Sized to sit next to the 12px button labels; `currentColor`
+ * inherits the button text colour.
+ */
+const LUCIDE_ATTRS =
+  'xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" ' +
+  'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+const ICON_CODE = `<svg ${LUCIDE_ATTRS}><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>`;
+const ICON_BRACES = `<svg ${LUCIDE_ATTRS}><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>`;
+
+/**
  * Mounts the demo toolbar: the "Manage" modal (Hub simulation) and the XML /
  * template viewers. The modal layer is implemented in React (`src/react/*`);
  * this module keeps the vanilla glue that integrates with the bpmn-js
@@ -57,7 +68,7 @@ export function mountCredentialsUI(modeler, container, elementTemplates = []) {
 }
 
 function mountManageButton(manage, toolbar) {
-  const toggleBtn = domify('<button class="ci-toggle-btn">Manage</button>');
+  const toggleBtn = domify('<button class="ci-toggle-btn">Manage Credentials and Secrets</button>');
   toolbar.appendChild(toggleBtn);
   toggleBtn.addEventListener('click', () => manage.open('credentials'));
 }
@@ -454,7 +465,7 @@ function applyCredentialToElement(modeler, element, property, credential) {
 }
 
 function mountXmlViewer(bpmnjs, toolbar) {
-  const xmlBtn = domify('<button class="ci-toggle-btn">&#60;/&#62; XML</button>');
+  const xmlBtn = domify(`<button class="ci-toggle-btn">${ICON_CODE}<span>XML</span></button>`);
   toolbar.appendChild(xmlBtn);
 
   xmlBtn.addEventListener('click', async () => {
@@ -470,7 +481,7 @@ function mountXmlViewer(bpmnjs, toolbar) {
  * template when nothing with an applied template is selected.
  */
 function mountTemplateViewer(modeler, toolbar, elementTemplates) {
-  const btn = domify('<button class="ci-toggle-btn">{ } Template</button>');
+  const btn = domify(`<button class="ci-toggle-btn">${ICON_BRACES}<span>Template</span></button>`);
   toolbar.appendChild(btn);
 
   btn.addEventListener('click', () => {

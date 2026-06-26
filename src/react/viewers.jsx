@@ -1,3 +1,5 @@
+import { DialogHeader, DialogTitle } from '@camunda/design-system';
+
 import { Modal } from './Modal';
 
 /**
@@ -7,16 +9,14 @@ export function XmlViewer({ xml, onClose }) {
   return (
     <Modal
       onClose={onClose}
-      className="xml-modal"
-      backdropClassName="xml-modal-backdrop"
+      width={900}
       header={(
-        <div className="xml-modal-header">
-          <h3>BPMN XML</h3>
-          <button data-close onClick={onClose}>×</button>
-        </div>
+        <DialogHeader>
+          <DialogTitle>BPMN XML</DialogTitle>
+        </DialogHeader>
       )}
     >
-      <pre>{xml}</pre>
+      <pre className="xml-modal-pre">{xml}</pre>
     </Modal>
   );
 }
@@ -28,19 +28,15 @@ export function TemplateViewer({ json, subtitle, onClose }) {
   return (
     <Modal
       onClose={onClose}
-      className="xml-modal"
-      backdropClassName="xml-modal-backdrop"
+      width={900}
       header={(
-        <div className="xml-modal-header">
-          <div className="xml-modal-title">
-            <h3>Element Template JSON</h3>
-            <span className="xml-modal-subtitle">{subtitle}</span>
-          </div>
-          <button data-close onClick={onClose}>×</button>
-        </div>
+        <DialogHeader>
+          <DialogTitle>Element Template JSON</DialogTitle>
+          <span className="xml-modal-subtitle">{subtitle}</span>
+        </DialogHeader>
       )}
     >
-      <pre>{json}</pre>
+      <pre className="xml-modal-pre">{json}</pre>
     </Modal>
   );
 }

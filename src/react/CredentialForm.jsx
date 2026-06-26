@@ -1,5 +1,19 @@
 import { useState } from 'react';
 
+import {
+  Button,
+  Checkbox,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@camunda/design-system';
+
+import { Lock } from 'lucide-react';
+
 import { CONFIGURATION_TEMPLATES } from '../sample-credentials';
 
 import { toUpperSnakeCase } from './util';
@@ -15,7 +29,10 @@ const SECTION_HINT_STYLE = { fontSize: 11, color: '#666', margin: '4px 0 8px' };
 function PropertyFields({ properties, values, setValue, showManageSecrets = true }) {
   return properties.map(p => (
     <div className="ci-form-row" key={p.key}>
-      <label>{p.label}{p.required ? ' *' : ''}{p.secret ? ' 🔒' : ''}</label>
+      <Label className="ci-form-label">
+        {p.label}{p.required ? ' *' : ''}
+        {p.secret && <Lock size={12} aria-label="secret" style={{ verticalAlign: 'text-bottom' }} />}
+      </Label>
       {p.secret ? (
         <SecretField
           propKey={p.key}
@@ -24,7 +41,7 @@ function PropertyFields({ properties, values, setValue, showManageSecrets = true
           showManageSecrets={showManageSecrets}
         />
       ) : (
-        <input
+        <Input
           type="text"
           data-prop={p.key}
           placeholder={p.key}
@@ -69,8 +86,8 @@ export function CreateForm({ credentialInstances, onSubmit, onCancel, templateId
 
   const setValue = (key, v) => setValues(prev => ({ ...prev, [key]: v }));
 
-  const handleTemplateChange = (e) => {
-    const next = CONFIGURATION_TEMPLATES.find(t => t.id === e.target.value);
+  const handleTemplateChange = (nextId) => {
+    const next = CONFIGURATION_TEMPLATES.find(t => t.id === nextId);
     setSelectedTemplateId(next.id);
     setValues({});
     setVersion(next.version);
@@ -142,16 +159,21 @@ export function CreateForm({ credentialInstances, onSubmit, onCancel, templateId
     <div className="ci-form">
       <h5>Create new credential</h5>
       <div className="ci-form-row">
-        <label>Credential template</label>
-        <select data-field="template" value={selectedTemplateId} onChange={handleTemplateChange}>
-          {CONFIGURATION_TEMPLATES.map(t => (
-            <option key={t.id} value={t.id}>{t.name}</option>
-          ))}
-        </select>
+        <Label>Credential template</Label>
+        <Select value={selectedTemplateId} onValueChange={handleTemplateChange}>
+          <SelectTrigger data-field="template">
+            <SelectValue placeholder="Choose a template…" />
+          </SelectTrigger>
+          <SelectContent>
+            {CONFIGURATION_TEMPLATES.map(t => (
+              <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="ci-form-row">
-        <label>Display name</label>
-        <input
+        <Label>Display name</Label>
+        <Input
           type="text"
           data-field="displayName"
           placeholder="e.g. My Slack Workspace"
@@ -160,8 +182,8 @@ export function CreateForm({ credentialInstances, onSubmit, onCancel, templateId
         />
       </div>
       <div className="ci-form-row">
-        <label>Credential ID <span style={HINT_STYLE}>(auto-suggested, immutable after creation)</span></label>
-        <input
+        <Label>Credential ID <span style={HINT_STYLE}>(auto-suggested, immutable after creation)</span></Label>
+        <Input
           type="text"
           data-field="name"
           placeholder="e.g. MY_SLACK_WORKSPACE"
@@ -171,18 +193,16 @@ export function CreateForm({ credentialInstances, onSubmit, onCancel, templateId
         {error && <span className="ci-field-error" data-error="name">{error}</span>}
       </div>
       <div className="ci-form-row">
-        <label>Version (stamped from template)</label>
-        <label style={{ display: 'flex', alignItems: 'flex-start', gap: 6, fontWeight: 'normal', fontSize: 11, color: '#888', marginBottom: 6 }}>
-          <input
-            type="checkbox"
+        <Label>Version (stamped from template)</Label>
+        <Label style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 'normal', fontSize: 11, color: '#888', marginBottom: 6 }}>
+          <Checkbox
             data-field="overrideVersion"
             checked={overrideVersion}
-            onChange={(e) => setOverrideVersion(e.target.checked)}
-            style={{ marginTop: 1 }}
+            onCheckedChange={(checked) => setOverrideVersion(checked === true)}
           />
           Override version (demo only — outdated instances)
-        </label>
-        <input
+        </Label>
+        <Input
           type="number"
           data-field="version"
           min="1"
@@ -197,8 +217,8 @@ export function CreateForm({ credentialInstances, onSubmit, onCancel, templateId
       </p>
       <PropertyFields properties={template.properties} values={values} setValue={setValue} showManageSecrets={showManageSecrets} />
       <div className="ci-form-actions">
-        <button data-primary data-action="submit" onClick={handleSubmit}>Create credential</button>
-        <button data-action="cancel" onClick={onCancel}>Cancel</button>
+        <Button data-action="submit" onClick={handleSubmit}>Create credential</Button>
+        <Button variant="outline" data-action="cancel" onClick={onCancel}>Cancel</Button>
       </div>
     </div>
   );
@@ -252,12 +272,12 @@ export function EditForm({ credential, idx, credentialInstances, onSaved, onCanc
         </p>
       )}
       <div className="ci-form-row">
-        <label>Credential ID <span style={HINT_STYLE}>(immutable)</span></label>
-        <input type="text" value={credential.name} disabled />
+        <Label>Credential ID <span style={HINT_STYLE}>(immutable)</span></Label>
+        <Input type="text" value={credential.name} disabled />
       </div>
       <div className="ci-form-row">
-        <label>Display name</label>
-        <input
+        <Label>Display name</Label>
+        <Input
           type="text"
           data-field="displayName"
           placeholder="e.g. Slack Production"
@@ -271,10 +291,10 @@ export function EditForm({ credential, idx, credentialInstances, onSaved, onCanc
       </p>
       <PropertyFields properties={matchingTemplate.properties} values={values} setValue={setValue} showManageSecrets={showManageSecrets} />
       <div className="ci-form-actions">
-        <button data-primary data-action="save" onClick={handleSave}>
+        <Button data-action="save" onClick={handleSave}>
           {isUpgrade ? 'Upgrade credential' : 'Save changes'}
-        </button>
-        <button data-action="cancel" onClick={onCancel}>Cancel</button>
+        </Button>
+        <Button variant="outline" data-action="cancel" onClick={onCancel}>Cancel</Button>
       </div>
     </div>
   );

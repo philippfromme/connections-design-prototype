@@ -1,6 +1,12 @@
 import { useReducer } from 'react';
 
 import {
+  Button,
+  Checkbox,
+  Label
+} from '@camunda/design-system';
+
+import {
   CONFIGURATION_TEMPLATES,
   SAMPLE_CREDENTIALS,
   SLACK_ICON
@@ -57,22 +63,20 @@ export function CredentialsPanel({ credentialInstances }) {
       <div className="ci-section">
         <h4>Permissions</h4>
         <div className="ci-permissions">
-          <label>
-            <input
-              type="checkbox"
+          <Label className="ci-checkbox-label">
+            <Checkbox
               data-perm="create"
               checked={permissions.create}
-              onChange={(e) => setPermission('create', e.target.checked)}
+              onCheckedChange={(checked) => setPermission('create', checked === true)}
             /> create
-          </label>
-          <label>
-            <input
-              type="checkbox"
+          </Label>
+          <Label className="ci-checkbox-label">
+            <Checkbox
               data-perm="update"
               checked={permissions.update}
-              onChange={(e) => setPermission('update', e.target.checked)}
+              onCheckedChange={(checked) => setPermission('update', checked === true)}
             /> update
-          </label>
+          </Label>
         </div>
       </div>
 
@@ -102,18 +106,18 @@ export function CredentialsPanel({ credentialInstances }) {
                     </div>
                     <div className="ci-inst-actions">
                       {permissions.update && isIncompatible && (
-                        <button onClick={() => dispatchForm({ mode: 'edit', credential: inst, idx, isUpgrade: true })}>
+                        <Button size="sm" onClick={() => dispatchForm({ mode: 'edit', credential: inst, idx, isUpgrade: true })}>
                           Upgrade
-                        </button>
+                        </Button>
                       )}
                       {permissions.update && !isIncompatible && (
-                        <button onClick={() => dispatchForm({ mode: 'edit', credential: inst, idx, isUpgrade: false })}>
+                        <Button size="sm" variant="outline" onClick={() => dispatchForm({ mode: 'edit', credential: inst, idx, isUpgrade: false })}>
                           Edit
-                        </button>
+                        </Button>
                       )}
-                      <button onClick={() => setInstances(credentialInstances.getAll().filter((_, i) => i !== idx))}>
+                      <Button size="sm" variant="ghost" onClick={() => setInstances(credentialInstances.getAll().filter((_, i) => i !== idx))}>
                         Remove
-                      </button>
+                      </Button>
                     </div>
                   </li>
                 );
@@ -127,8 +131,8 @@ export function CredentialsPanel({ credentialInstances }) {
         <div className="ci-section">
           <h4>Create new credential</h4>
           <div className="ci-create-actions">
-            <button data-action="random" onClick={addRandom}>Create random (Slack)</button>
-            <button data-action="explicit" onClick={() => dispatchForm({ mode: 'create' })}>Create from template…</button>
+            <Button variant="outline" data-action="random" onClick={addRandom}>Create random (Slack)</Button>
+            <Button data-action="explicit" onClick={() => dispatchForm({ mode: 'create' })}>Create from template…</Button>
           </div>
           <div className="ci-form-container">
             {form && form.mode === 'create' && (
@@ -161,8 +165,8 @@ export function CredentialsPanel({ credentialInstances }) {
       <div className="ci-section">
         <h4>Bulk actions</h4>
         <div className="ci-create-actions">
-          <button data-action="load-samples" onClick={() => setInstances([ ...SAMPLE_CREDENTIALS ])}>Load samples</button>
-          <button data-action="mark-loaded" onClick={() => setInstances([])}>Mark loaded (empty)</button>
+          <Button variant="outline" data-action="load-samples" onClick={() => setInstances([ ...SAMPLE_CREDENTIALS ])}>Load samples</Button>
+          <Button variant="outline" data-action="mark-loaded" onClick={() => setInstances([])}>Mark loaded (empty)</Button>
         </div>
       </div>
     </>

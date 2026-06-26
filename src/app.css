@@ -45,6 +45,9 @@ body {
 }
 
 .ci-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 12px;
   font-size: 12px;
   font-family: sans-serif;
@@ -53,6 +56,10 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.ci-toggle-btn svg {
+  flex: 0 0 auto;
 }
 
 .ci-modal-backdrop {
@@ -177,13 +184,6 @@ body {
   color: #888;
 }
 
-.ci-instance-list li button {
-  width: auto;
-  padding: 2px 8px;
-  font-size: 11px;
-  cursor: pointer;
-}
-
 .ci-create-actions {
   display: flex;
   gap: 8px;
@@ -191,16 +191,6 @@ body {
 
 .ci-create-actions button {
   flex: 1;
-  padding: 8px;
-  font-size: 12px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #f7f7f8;
-}
-
-.ci-create-actions button:hover {
-  background: #e8e8ea;
 }
 
 .ci-form {
@@ -224,22 +214,24 @@ body {
   color: #444;
 }
 
-.ci-form input,
-.ci-form select {
+/* Secret label carries an inline lock icon; keep icon beside the text
+   (Tailwind preflight sets `svg { display: block }`, which would otherwise
+   push the icon onto its own line). */
+.ci-form .ci-form-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ci-form input {
   width: 100%;
-  padding: 5px 8px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 12px;
   margin-bottom: 8px;
   box-sizing: border-box;
 }
 
-.ci-form input[type="checkbox"] {
-  width: auto;
-  padding: 0;
-  margin: 0;
-  flex: none;
+.ci-form-row [data-slot="select-trigger"] {
+  width: 100%;
+  margin-bottom: 8px;
 }
 
 .ci-form .ci-form-row {
@@ -250,20 +242,6 @@ body {
   display: flex;
   gap: 8px;
   margin-top: 8px;
-}
-
-.ci-form .ci-form-actions button {
-  padding: 6px 12px;
-  font-size: 12px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.ci-form .ci-form-actions button[data-primary] {
-  background: #0d47a1;
-  color: #fff;
-  border-color: #0d47a1;
 }
 
 .ci-empty {
@@ -321,8 +299,8 @@ body {
   padding: 0 4px;
 }
 
-.xml-modal pre {
-  flex: 1;
+.xml-modal-pre {
+  max-height: 70vh;
   overflow: auto;
   margin: 0;
   padding: 16px;
@@ -330,7 +308,7 @@ body {
   line-height: 1.5;
   background: #1e1e1e;
   color: #d4d4d4;
-  border-radius: 0 0 8px 8px;
+  border-radius: 6px;
   white-space: pre-wrap;
   word-break: break-all;
 }
@@ -411,27 +389,6 @@ body {
   gap: 4px;
 }
 
-.ci-inst-actions button {
-  font-size: 11px;
-  padding: 2px 8px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background: #fff;
-}
-
-.ci-inst-actions button[data-upgrade] {
-  background: #fff3cd;
-  border-color: #ffc107;
-  color: #856404;
-}
-
-.ci-inst-actions button[data-edit] {
-  background: #e8f4fd;
-  border-color: #90caf9;
-  color: #1565c0;
-}
-
 .ci-incompatible {
   border-left: 3px solid #ffc107;
   padding-left: 8px;
@@ -486,30 +443,16 @@ body {
 .ci-secret-select {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 4px 6px;
-  font-size: 12px;
 }
 
 .ci-secret-input {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 4px 6px;
-  font-size: 12px;
   font-family: monospace;
 }
 
 .ci-secret-btn {
   flex: 0 0 auto;
-  padding: 4px 8px;
-  font-size: 11px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background: #f7f7f7;
-}
-
-.ci-secret-btn:hover {
-  background: #efefef;
 }
 
 /* --- Secrets management modal --- */
@@ -551,4 +494,18 @@ body {
   font-size: 12px;
   color: #856404;
   margin: 0 0 12px;
+}
+
+/*
+ * Raise design-system Radix portals above bpmn-js overlays.
+ * The `.djs-context-pad` sits at z-index 100, which is above the DS
+ * dialog/popper default (`z-50`), so portaled overlays, dialogs and the
+ * Select dropdowns would otherwise render behind the context pad.
+ */
+[data-slot="dialog-overlay"],
+[data-slot="dialog-content"],
+[data-slot="select-content"],
+[data-slot="popover-content"],
+[data-slot="dropdown-menu-content"] {
+  z-index: 1100;
 }

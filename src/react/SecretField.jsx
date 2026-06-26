@@ -1,6 +1,16 @@
 import { useState } from 'react';
 
 import {
+  Button,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@camunda/design-system';
+
+import {
   SECRET_PREFIX,
   listSecretNames,
   secretExists,
@@ -28,8 +38,7 @@ export function SecretField({ propKey, value, onChange, showManageSecrets = true
   const names = listSecretNames();
   const known = refName && names.includes(refName);
 
-  const handleSelect = (e) => {
-    const v = e.target.value;
+  const handleSelect = (v) => {
     if (v === '__manual__') {
       setManual(true);
       onChange(isRef ? '' : value);
@@ -44,29 +53,35 @@ export function SecretField({ propKey, value, onChange, showManageSecrets = true
   return (
     <div className="ci-secret-field" data-secret-field={propKey}>
       <div className="ci-secret-row">
-        <select className="ci-secret-select" value={selectValue} onChange={handleSelect}>
-          <option value="">Choose a secret…</option>
-          {names.map(n => (
-            <option key={n} value={n}>{n}</option>
-          ))}
-          {refName && !known && (
-            <option value={refName}>{refName} (not in store)</option>
-          )}
-          <option value="__manual__">Enter reference manually…</option>
-        </select>
+        <Select value={selectValue || undefined} onValueChange={handleSelect}>
+          <SelectTrigger className="ci-secret-select">
+            <SelectValue placeholder="Choose a secret…" />
+          </SelectTrigger>
+          <SelectContent>
+            {names.map(n => (
+              <SelectItem key={n} value={n}>{n}</SelectItem>
+            ))}
+            {refName && !known && (
+              <SelectItem value={refName}>{refName} (not in store)</SelectItem>
+            )}
+            <SelectItem value="__manual__">Enter reference manually…</SelectItem>
+          </SelectContent>
+        </Select>
         {showManageSecrets && (
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             className="ci-secret-btn"
             onClick={() => openManageSecrets()}
           >
             Manage secrets…
-          </button>
+          </Button>
         )}
       </div>
       {manual && (
         <div className="ci-secret-manual">
-          <input
+          <Input
             type="text"
             className="ci-secret-input"
             placeholder={`${SECRET_PREFIX}MY_SECRET`}
