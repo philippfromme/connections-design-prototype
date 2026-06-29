@@ -26,7 +26,7 @@
     "modeler-moddle": "^0.2.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "zeebe-bpmn-moddle": "^1.7.0"
+    "zeebe-bpmn-moddle": "github:camunda/zeebe-bpmn-moddle#configuration-template-support"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",

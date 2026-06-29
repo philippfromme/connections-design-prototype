@@ -28,7 +28,7 @@ import {
   CreateAppendElementTemplatesModule
 } from 'bpmn-js-create-append-anything';
 
-import ZeebeModdle from './moddle/zeebe-credentials';
+import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe.json';
 import ModelerModdle from 'modeler-moddle/resources/modeler.json';
 
 import diagramXML from '../resources/diagram.bpmn?raw';
