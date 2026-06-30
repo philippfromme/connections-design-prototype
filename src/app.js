@@ -2,6 +2,7 @@ import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import '@bpmn-io/properties-panel/dist/assets/properties-panel.css';
+import '@bpmn-io/element-template-chooser/dist/element-template-chooser.css';
 import 'bpmn-js-element-templates/dist/assets/element-templates.css';
 
 import '@camunda/design-system/styles.css';
